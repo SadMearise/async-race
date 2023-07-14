@@ -6,53 +6,7 @@
 })
 
 <body>
-  <div class="wrapper">
-    @@include('html/_header.htm',{})
-    <main class="main">
-      <div class="control-menu">
-        <div class="control-menu__create-field">
-          <input type="text" class="control-menu__text-input">
-          <input type="color" class="control-menu__color-input">
-          <button type="button" class="control-menu__race-btn btn">CREATE</button>
-        </div>
-        <div class="control-menu__update-field">
-          <input type="text" class="control-menu__text-input">
-          <input type="color" class="control-menu__color-input">
-          <button type="button" class="control-menu__race-btn btn">UPDATE</button>
-        </div>
-        <div class="control-menu__race-field">
-          <button type="button" class="control-menu__race-btn btn">RACE</button>
-          <button type="button" class="control-menu__race-btn btn">RESET</button>
-          <button type="button" class="control-menu__race-btn btn">GENERATE CARS</button>
-        </div>
-      </div>
-      <section class="garage">
-        <h2 class="garage__title">Garage 
-          <span class="garage__cars-count">[7]</span>
-        </h2>
-        <div class="garage__tracks">
-          <div class="garage__track track">
-            <div class="track__top">
-              <div class="track__car-settings">
-                <button type="button" class="track__select-car-btn btn">SELECT</button>
-                <button type="button" class="track__remove-car-btn btn">REMOVE</button>
-              </div>
-              <span class="track__car-name">Tesla</span>
-            </div>
-            <div class="track__bottom">
-              <div class="track__engine-control">
-                <button type="button" class="track__engine-control-btn-start btn btn-engine btn-engine_start">A</button>
-                <button type="button" class="track__engine-control-btn-stop btn btn-engine btn-engine_stop">B</button>
-              </div>
-              <img src="./img/car.svg" alt="car" class="track__car-img">
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-    @@include('html/_footer.htm',{})
-  </div>
-  <!-- @@include('html/_js-index.htm',{}) -->
+  @@include('html/_js-index.htm',{})
 </body>
 
 </html>

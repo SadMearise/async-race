@@ -1,0 +1,26 @@
+#wins, #time {
+  cursor: pointer;
+}
+
+.leaderboard-table {
+
+  &__head-cell {
+    padding: 10px;
+
+    
+  }
+
+  &__row {
+    border-bottom: 1px solid black;
+
+    & + & {
+      margin-top: 5px;
+    }
+  }
+
+  &__row-cell {
+    text-align: center;
+    vertical-align: middle;
+    padding: 2px 4px;
+  }
+}

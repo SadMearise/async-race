@@ -8,6 +8,19 @@
   "base/reset",
   "base/base";
 
+@import 
+  "pages/home";
+  
+@import 
+  "components/btn",
+  "components/car-img",
+  "components/control-menu",
+  "components/leaderboard-table",
+  "components/pagination",
+  "components/section-title",
+  "components/popup",
+  "components/track";
+  
 @import
   "layout/header",
   "layout/footer";

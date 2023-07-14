@@ -1,0 +1,13 @@
+.control-menu {
+  margin-bottom: 40px;
+
+  &__form-field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    & + & {
+      margin-top: 5px;
+    }
+  }
+}

@@ -1,0 +1,32 @@
+.header {
+  padding: 30px;
+  &__container {
+  }
+
+  &__body {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__title {
+    font-size: getRemFromPx(28);
+  }
+
+  &__nav {
+  }
+}
+
+.header-nav-menu {
+  &__list {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  &__item {
+  }
+
+  &__btn {
+  }
+}

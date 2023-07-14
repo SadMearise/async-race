@@ -1,0 +1,12 @@
+.car-img {
+  
+  &_size_small {
+    width: 50px;
+    height: 30px;
+  }
+
+  &_size_big {
+    width: 150px;
+    height: 60px;
+  }
+}
