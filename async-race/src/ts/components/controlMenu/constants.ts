@@ -1,0 +1,96 @@
+export const HEX_LENGTH: number = 7;
+export const TEXT_TYPE_VALUE: string = 'text';
+export const TEXT_CLASSES: string[] = ['control-menu__text-input'];
+export const COLOR_TYPE_VALUE: string = 'color';
+export const COLOR_CLASSES: string[] = ['control-menu__color-input'];
+export const RACE_BUTTON_TEXT: string = 'RACE';
+export const RESET_BUTTON_TEXT: string = 'RESET';
+export const GENERATE_BUTTON_TEXT: string = 'GENERATE CARS';
+export const UPDATE_BUTTON_TEXT: string = 'UPDATE';
+export const CREATE_BUTTON_TEXT: string = 'CREATE';
+export const UPDATE_BUTTON_ATTRS: Record<string, string> = { disabled: '' };
+export const UPDATE_INPUT1_ATTRS: Record<string, string> = { disabled: '' };
+export const UPDATE_INPUT2_ATTRS: Record<string, string> = { disabled: '' };
+export const NUMBER_RANDOM_GENERATED_CARS: number = 100;
+export const CAR_BRANDS: string[] = [
+  'BWM',
+  'Toyota',
+  'Tesla',
+  'Kia',
+  'Honda',
+  'Huyndai',
+  'Nissan',
+  'Porsche',
+  'Audi',
+  'Ford',
+  'Volkswagen',
+  'Mercedes-Benz',
+  'Acura',
+  'Mitsubishi',
+  'Lexus',
+  'Renault',
+  'Mazda',
+  'Cadillac',
+  'Hummer',
+  'GMC',
+  'Jeep',
+  'Lincoln',
+  'Pontiac',
+  'Dodge',
+  'Aurus',
+  'Maserati',
+  'Ferrari',
+];
+export const CAR_MODELS: string[] = [
+  'Ace',
+  '378 GT Zagato',
+  'TSX',
+  'ZDX',
+  'Adler',
+  '3000 GT',
+  'Airtrek',
+  '500',
+  'AMG ONE',
+  'CLS',
+  'CLA',
+  '503',
+  '507',
+  'i8',
+  'i5',
+  'i7',
+  'Viper',
+  'Vision',
+  'Voyager',
+  'Avenger',
+  'Cherokee',
+  'Comanche',
+  '2000GT',
+  'Allex',
+  'Allion',
+  'Aviator',
+  'Blackwood',
+  'Continental',
+  'Corsair',
+  'Acadia',
+  'Canyon',
+  'Jimmy',
+  '250 GTO',
+  '296',
+  '328',
+  '718 Spyder',
+  '911',
+  '944',
+  '959',
+  'Cybertruck',
+  'Model 3',
+  'Model S',
+  'Model X',
+  'Komendant',
+  'Senat',
+  'Aries',
+  'Caliber',
+  'Caravan',
+  'Challenger',
+  'M-NV',
+  'X-NV',
+];
