@@ -1,19 +1,19 @@
 import { WINNERS_URL } from './constants';
-import { StatusCodes, HTTPMethods } from '../enums';
+import { HTTPMethods } from '../enums';
 
-const getDeletedWinnerPromise = async (id: number): Promise<void> => {
-  const response: Response = await fetch(
-    `${WINNERS_URL}/${id}`,
-    {
-      method: HTTPMethods.delete,
-    },
-  );
+const getDeletedWinnerPromise = async (id: number): Promise<Record<string, never>> => {
+  try {
+    const response: Response = await fetch(
+      `${WINNERS_URL}/${id}`,
+      {
+        method: HTTPMethods.delete,
+      },
+    );
 
-  if (response.status === StatusCodes.code404) {
-    throw new Error('Content not found');
+    return await response.json();
+  } catch (error: unknown) {
+    return {};
   }
-
-  return response.json();
 };
 
 export default getDeletedWinnerPromise;

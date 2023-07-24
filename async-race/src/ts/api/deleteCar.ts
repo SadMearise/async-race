@@ -1,5 +1,5 @@
 import { GARAGE_URL } from './constants';
-import { StatusCodes, HTTPMethods } from '../enums';
+import { HTTPMethods } from '../enums';
 
 const getDeletedCarPromise = async (id: number): Promise<void> => {
   const response: Response = await fetch(
@@ -8,10 +8,6 @@ const getDeletedCarPromise = async (id: number): Promise<void> => {
       method: HTTPMethods.delete,
     },
   );
-
-  if (response.status === StatusCodes.code404) {
-    throw new Error('Content not found');
-  }
 
   return response.json();
 };

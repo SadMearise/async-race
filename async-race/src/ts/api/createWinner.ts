@@ -1,5 +1,5 @@
 import { WINNERS_URL } from './constants';
-import { HTTPMethods, StatusCodes } from '../enums';
+import { HTTPMethods } from '../enums';
 import { TWinner } from '../types';
 
 const getCreatedWinnerPromise = async (body: TWinner): Promise<TWinner> => {
@@ -14,13 +14,7 @@ const getCreatedWinnerPromise = async (body: TWinner): Promise<TWinner> => {
     },
   );
 
-  if (response.status === StatusCodes.code500) {
-    throw new Error('Insert failed, duplicate id');
-  } else if (response.status === StatusCodes.code201) {
-    return response.json();
-  }
-
-  throw new Error('error');
+  return response.json();
 };
 
 export default getCreatedWinnerPromise;

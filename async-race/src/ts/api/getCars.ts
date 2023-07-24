@@ -13,10 +13,6 @@ const getCarsPromise = async (): Promise<TCars> => {
   );
   const totalCars: string | null = response.headers.get('X-Total-Count');
 
-  if (!totalCars) {
-    throw new Error('error');
-  }
-
   return {
     cars: await response.json(),
     totalCars: Number(totalCars),

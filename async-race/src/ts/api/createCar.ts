@@ -1,5 +1,5 @@
 import { GARAGE_URL } from './constants';
-import { HTTPMethods, StatusCodes } from '../enums';
+import { HTTPMethods } from '../enums';
 import { TCarBody, TCar } from '../types';
 
 const getCreatedCarPromise = async (body: TCarBody): Promise<TCar> => {
@@ -14,11 +14,7 @@ const getCreatedCarPromise = async (body: TCarBody): Promise<TCar> => {
     },
   );
 
-  if (response.status === StatusCodes.code201) {
-    return response.json();
-  }
-
-  throw new Error('error');
+  return response.json();
 };
 
 export default getCreatedCarPromise;
