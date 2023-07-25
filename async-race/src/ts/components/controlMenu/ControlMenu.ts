@@ -407,7 +407,7 @@ export default class ControlMenu extends Component {
   private handleGenerateCarsButtonListener(generateCarsButtonComponent: Component): void {
     generateCarsButtonComponent.addListener('click', async () => {
       generateCarsButtonComponent.setAttributes({ disabled: '' });
-
+      this.eventEmitter.emit('race-button: add disabled');
       await this.generateCars();
 
       const carsInfo: TCars = await getCarsPromise();
@@ -419,6 +419,7 @@ export default class ControlMenu extends Component {
       this.eventEmitter.emit('garage-pagination: rerender', JSON.stringify(carsInfo));
 
       generateCarsButtonComponent.removeAttributes(['disabled']);
+      this.eventEmitter.emit('race-button: remove disabled');
     });
   }
 
