@@ -1,4 +1,3 @@
-import { log } from 'console';
 import Component from '../Component';
 import SVGComponent from '../SVGComponent';
 import EventEmitter from '../../utils/EventEmitter';

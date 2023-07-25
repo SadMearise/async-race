@@ -299,6 +299,8 @@ export default class ControlMenu extends Component {
       this.eventEmitter.emit('race-button: add disabled');
       this.eventEmitter.emit('create-button: add disabled');
       this.eventEmitter.emit('generate-button: add disabled');
+      this.eventEmitter.emit('garage-pagination-prev: add disabled');
+      this.eventEmitter.emit('garage-pagination-next: add disabled');
       this.eventEmitter.emit('update-form-field: lock');
 
       const carsInfo: TCars = await getCarsPromise();
@@ -378,6 +380,8 @@ export default class ControlMenu extends Component {
       this.eventEmitter.emit('create-button: remove disabled');
       this.eventEmitter.emit('generate-button: remove disabled');
       this.eventEmitter.emit('race-button: remove disabled');
+      this.eventEmitter.emit('garage-pagination-prev: remove disabled');
+      this.eventEmitter.emit('garage-pagination-next: remove disabled');
     });
   }
 

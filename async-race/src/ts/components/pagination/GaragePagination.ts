@@ -58,10 +58,13 @@ export default class GaragePagination extends Component {
     );
     const pageCounterComponent = this.createPageCounterComponent();
 
+    this.append(prevButtonComponent, pageCounterComponent, nextButtonComponent);
+
     this.handlePrevButtonListener(prevButtonComponent);
     this.handleNextButtonListener(nextButtonComponent);
 
-    this.append(prevButtonComponent, pageCounterComponent, nextButtonComponent);
+    this.subscribersPrevButton(prevButtonComponent);
+    this.subscribersNextButton(nextButtonComponent);
   }
 
   private handlePrevButtonListener(prevButtonComponent: Component): void {
@@ -97,6 +100,24 @@ export default class GaragePagination extends Component {
         this.eventEmitter.emit('generate-button: remove disabled');
         this.eventEmitter.emit('reset-button: add disabled');
       }
+    });
+  }
+
+  private subscribersPrevButton(prevButtonComponent: Component): void {
+    this.eventEmitter.subscribe('garage-pagination-prev: add disabled', () => {
+      prevButtonComponent.setAttributes({ disabled: '' });
+    });
+    this.eventEmitter.subscribe('garage-pagination-prev: remove disabled', () => {
+      prevButtonComponent.removeAttributes(['disabled']);
+    });
+  }
+
+  private subscribersNextButton(nextButtonComponent: Component): void {
+    this.eventEmitter.subscribe('garage-pagination-next: add disabled', () => {
+      nextButtonComponent.setAttributes({ disabled: '' });
+    });
+    this.eventEmitter.subscribe('garage-pagination-next: remove disabled', () => {
+      nextButtonComponent.removeAttributes(['disabled']);
     });
   }
 
