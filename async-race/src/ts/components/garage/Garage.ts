@@ -367,6 +367,8 @@ export default class Garage extends Component {
         this.eventEmitter.emit('race-button: remove disabled');
         this.eventEmitter.emit('create-button: remove disabled');
         this.eventEmitter.emit('generate-button: remove disabled');
+        this.eventEmitter.emit('garage-pagination-next: remove disabled');
+        this.eventEmitter.emit('garage-pagination-prev: remove disabled');
         this.eventEmitter.emit('reset-button: add disabled');
       }
     });
