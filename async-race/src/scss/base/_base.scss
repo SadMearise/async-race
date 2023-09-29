@@ -1,7 +1,8 @@
 body {
   &.lock {
-		overflow: hidden;
-	}
+    overflow: hidden;
+  }
+
   user-select: none;
 }
 
@@ -11,8 +12,8 @@ body {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  background: rgb(199,88,136);
-  background: linear-gradient(0deg, rgba(199,88,136,1) 0%, rgba(76,116,163,1) 100%) no-repeat;
+  background: rgb(199, 88, 136);
+  background: linear-gradient(0deg, rgba(199, 88, 136, 1) 0%, rgba(76, 116, 163, 1) 100%) no-repeat;
 }
 
 .container {

@@ -1,10 +1,10 @@
-import { HTTPMethods, EngineStatus } from '../enums';
-import { IEngineStartResult } from '../types';
+import { HTTPMethods, EngineStatus } from '../constants';
+import { TEngineStartResult } from '../types';
 import { ENGINE_URL } from './constants';
 
-const getEngineStartResult = async (id: number): Promise<IEngineStartResult> => {
+const fetchEngineStartResult = async (id: number): Promise<TEngineStartResult> => {
   try {
-    const response: Response | void = await fetch(
+    const response: Response = await fetch(
       `${ENGINE_URL}?id=${id}&status=${EngineStatus.drive}`,
       {
         method: HTTPMethods.patch,
@@ -12,9 +12,9 @@ const getEngineStartResult = async (id: number): Promise<IEngineStartResult> => 
     );
 
     return await response.json();
-  } catch (error: unknown) {
+  } catch (error) {
     return { success: false };
   }
 };
 
-export default getEngineStartResult;
+export default fetchEngineStartResult;

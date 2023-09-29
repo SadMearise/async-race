@@ -1,5 +1,5 @@
 import state from '../../data/state';
-import { Pages } from '../../enums';
+import { Pages } from '../../constants';
 import EventEmitter from '../../utils/EventEmitter';
 import Component from '../Component';
 import { NAVIGATION_ITEMS_CONTENT, PAGES_LIST } from './constants';
@@ -61,12 +61,12 @@ export default class Header extends Component {
 
   private handleNavigationButtonListener(buttonComponent: Component): void {
     buttonComponent.addListener('click', async () => {
-      const pageData: string | undefined = buttonComponent.getNode().dataset.page;
+      const currentPage: string | undefined = buttonComponent.getNode().dataset.page;
 
-      if (state.currentPage !== pageData) {
-        if (pageData === Pages.garage) {
+      if (state.currentPage !== currentPage) {
+        if (currentPage === Pages.garage) {
           state.currentPage = Pages.garage;
-        } else if (pageData === Pages.leaderboard) {
+        } else if (currentPage === Pages.leaderboard) {
           state.currentPage = Pages.leaderboard;
         }
 

@@ -2,13 +2,13 @@ import Component from '../Component';
 import EventEmitter from '../../utils/EventEmitter';
 import state from '../../data/state';
 import { GARAGE_LIMIT } from '../../constants';
-import getCarsPromise from '../../api/getCars';
+import fetchCars from '../../api/getCars';
 import { TCars } from '../../types';
 import {
   PAGINATION_NEXT_BUTTON_CLASSES, PAGINATION_NEXT_BUTTON_TEXT,
   PAGINATION_PREV_BUTTON_CLASSES, PAGINATION_PREV_BUTTON_TEXT,
 } from './constants';
-import { Pages } from '../../enums';
+import { Pages } from '../../constants';
 import startedCars from '../../data/startedCars';
 
 export default class GaragePagination extends Component {
@@ -73,7 +73,7 @@ export default class GaragePagination extends Component {
         state.currentGaragePage -= 1;
         startedCars.length = 0;
 
-        const carsInfo: TCars = await getCarsPromise();
+        const carsInfo: TCars = await fetchCars();
 
         this.eventEmitter.emit('garage: rerender', JSON.stringify(carsInfo));
         this.eventEmitter.emit('garage-pagination: rerender', JSON.stringify(carsInfo));
@@ -91,7 +91,7 @@ export default class GaragePagination extends Component {
         state.currentGaragePage += 1;
         startedCars.length = 0;
 
-        const carsInfo: TCars = await getCarsPromise();
+        const carsInfo: TCars = await fetchCars();
 
         this.eventEmitter.emit('garage: rerender', JSON.stringify(carsInfo));
         this.eventEmitter.emit('garage-pagination: rerender', JSON.stringify(carsInfo));

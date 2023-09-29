@@ -1,8 +1,8 @@
 import { WINNERS_URL } from './constants';
-import { HTTPMethods } from '../enums';
+import { HTTPMethods } from '../constants';
 import { TWinner } from '../types';
 
-const getCreatedWinnerPromise = async (body: TWinner): Promise<TWinner> => {
+const fetchCreatedWinner = async (body: TWinner): Promise<TWinner> => {
   const response: Response = await fetch(
     WINNERS_URL,
     {
@@ -14,7 +14,9 @@ const getCreatedWinnerPromise = async (body: TWinner): Promise<TWinner> => {
     },
   );
 
-  return response.json();
+  const createdWinner = await response.json();
+
+  return createdWinner;
 };
 
-export default getCreatedWinnerPromise;
+export default fetchCreatedWinner;

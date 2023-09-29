@@ -7,8 +7,8 @@ import {
   PAGINATION_NEXT_BUTTON_CLASSES, PAGINATION_NEXT_BUTTON_TEXT,
   PAGINATION_PREV_BUTTON_CLASSES, PAGINATION_PREV_BUTTON_TEXT,
 } from './constants';
-import getWinnersPromise from '../../api/getWinners';
-import { Pages } from '../../enums';
+import fetchWinners from '../../api/getWinners';
+import { Pages } from '../../constants';
 
 export default class LeaderboardPagination extends Component {
   private eventEmitter: EventEmitter;
@@ -69,7 +69,7 @@ export default class LeaderboardPagination extends Component {
       if (state.currentLeaderboardPage > 1) {
         state.currentLeaderboardPage -= 1;
 
-        const winnersInfo: TWinners = await getWinnersPromise();
+        const winnersInfo: TWinners = await fetchWinners();
 
         this.eventEmitter.emit('leaderboard: rerender', JSON.stringify(winnersInfo));
         this.eventEmitter.emit('leaderboard-pagination: rerender', JSON.stringify(winnersInfo));
@@ -82,7 +82,7 @@ export default class LeaderboardPagination extends Component {
       if (state.totalLeaderboardPages > state.currentLeaderboardPage) {
         state.currentLeaderboardPage += 1;
 
-        const winnersInfo: TWinners = await getWinnersPromise();
+        const winnersInfo: TWinners = await fetchWinners();
 
         this.eventEmitter.emit('leaderboard: rerender', JSON.stringify(winnersInfo));
         this.eventEmitter.emit('leaderboard-pagination: rerender', JSON.stringify(winnersInfo));

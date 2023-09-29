@@ -42,7 +42,7 @@ export type TEngineOptions = {
   velocity: number;
 };
 
-export type IEngineStartResult = {
+export type TEngineStartResult = {
   success: boolean;
 };
 
@@ -68,7 +68,7 @@ export type TWinners = {
 };
 
 export type TSVG = {
-  classNames: string[];
+  classNames?: string[];
   xmlns: string;
   attributes: TSVGAttributes;
   path: TSVGPath;

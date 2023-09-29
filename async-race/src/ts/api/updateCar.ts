@@ -1,8 +1,8 @@
-import { HTTPMethods } from '../enums';
+import { HTTPMethods } from '../constants';
 import { TCarBody, TCar } from '../types';
 import { GARAGE_URL } from './constants';
 
-const getUpdatedCarPromise = async (id: number, body: TCarBody): Promise<TCar> => {
+const fetchUpdatedCar = async (id: number, body: TCarBody): Promise<TCar> => {
   const response: Response = await fetch(
     `${GARAGE_URL}/${id}`,
     {
@@ -14,7 +14,9 @@ const getUpdatedCarPromise = async (id: number, body: TCarBody): Promise<TCar> =
     },
   );
 
-  return response.json();
+  const updatedCar = await response.json();
+
+  return updatedCar;
 };
 
-export default getUpdatedCarPromise;
+export default fetchUpdatedCar;

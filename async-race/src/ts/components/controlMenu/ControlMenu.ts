@@ -1,16 +1,15 @@
 import Component from '../Component';
 import EventEmitter from '../../utils/EventEmitter';
-import getCreatedCarPromise from '../../api/createCar';
-import getCarsPromise from '../../api/getCars';
-import getUpdatedCarPromise from '../../api/updateCar';
+import fetchCreatedCar from '../../api/createCar';
+import fetchCars from '../../api/getCars';
+import fetchUpdatedCar from '../../api/updateCar';
 import {
-  IEngineStartResult, TCar,
+  TEngineStartResult, TCar,
   TCars, TEngineOptions, TWinners,
 } from '../../types';
-import getEngineOptions from '../../api/controlCarEngine';
-import { EngineStatus, Pages } from '../../enums';
+import fetchEngineOptions from '../../api/controlCarEngine';
+import { EngineStatus, Pages } from '../../constants';
 import state from '../../data/state';
-import getEngineStartResult from '../../api/getEngineStartResult';
 import {
   CAR_BRANDS, CAR_MODELS, COLOR_CLASSES, COLOR_TYPE_VALUE, CREATE_BUTTON_TEXT, GENERATE_BUTTON_TEXT,
   HEX_LENGTH,
@@ -18,10 +17,11 @@ import {
   TEXT_CLASSES, TEXT_TYPE_VALUE, UPDATE_BUTTON_ATTRS, UPDATE_BUTTON_TEXT,
   UPDATE_INPUT1_ATTRS, UPDATE_INPUT2_ATTRS,
 } from './constants';
-import getUpdatedWinnerPromise from '../../api/updateWinner';
-import getWinnerPromise from '../../api/getWinner';
-import getWinnersPromise from '../../api/getWinners';
+import fetchUpdatedWinner from '../../api/updateWinner';
+import fetchWinner from '../../api/getWinner';
+import fetchWinners from '../../api/getWinners';
 import startedCars from '../../data/startedCars';
+import fetchEngineStartResult from '../../api/getEngineStartResult';
 
 export default class ControlMenu extends Component {
   private eventEmitter: EventEmitter;
@@ -124,8 +124,8 @@ export default class ControlMenu extends Component {
       const textValue: string = (textInputComponent.getNode() as HTMLInputElement).value;
       const colorValue: string = (colorInputComponent.getNode() as HTMLInputElement).value;
 
-      await getCreatedCarPromise({ name: textValue, color: colorValue });
-      const carsInfo: TCars = await getCarsPromise();
+      await fetchCreatedCar({ name: textValue, color: colorValue });
+      const carsInfo: TCars = await fetchCars();
       if (carsInfo.cars.length) {
         this.eventEmitter.emit('race-button: remove disabled');
       }
@@ -240,16 +240,16 @@ export default class ControlMenu extends Component {
       const carID: number = Number(updateButtonComponent.getNode().dataset.id);
       this.eventEmitter.emit('update-form-field: lock');
 
-      await getUpdatedCarPromise(carID, { name: textValue, color: colorValue });
+      await fetchUpdatedCar(carID, { name: textValue, color: colorValue });
 
-      const carsInfo: TCars = await getCarsPromise();
+      const carsInfo: TCars = await fetchCars();
       this.eventEmitter.emit('control-menu: reset');
       this.eventEmitter.emit('garage: rerender', JSON.stringify(carsInfo));
 
-      const { wins, time }: { wins: number, time: number } = await getWinnerPromise(carID);
-      await getUpdatedWinnerPromise(carID, { wins, time });
+      const { wins, time }: { wins: number, time: number } = await fetchWinner(carID);
+      await fetchUpdatedWinner(carID, { wins, time });
 
-      const winnersInfo: TWinners = await getWinnersPromise();
+      const winnersInfo: TWinners = await fetchWinners();
       this.eventEmitter.emit('leaderboard: rerender', JSON.stringify(winnersInfo));
     });
   }
@@ -303,7 +303,7 @@ export default class ControlMenu extends Component {
       this.eventEmitter.emit('garage-pagination-next: add disabled');
       this.eventEmitter.emit('update-form-field: lock');
 
-      const carsInfo: TCars = await getCarsPromise();
+      const carsInfo: TCars = await fetchCars();
 
       const engineOptionsPromises: Promise<TEngineOptions>[] = [];
 
@@ -311,7 +311,7 @@ export default class ControlMenu extends Component {
         this.eventEmitter.emit(`start-engine-button${carsInfo.cars[i].id}: add disabled`);
         this.eventEmitter.emit(`remove-button${carsInfo.cars[i].id}: add disabled`);
         this.eventEmitter.emit(`select-button${carsInfo.cars[i].id}: add disabled`);
-        engineOptionsPromises.push(getEngineOptions(carsInfo.cars[i].id, EngineStatus.started));
+        engineOptionsPromises.push(fetchEngineOptions(carsInfo.cars[i].id, EngineStatus.started));
       }
 
       const engineOptionsResults: TEngineOptions[] = await Promise.all(engineOptionsPromises);
@@ -322,10 +322,10 @@ export default class ControlMenu extends Component {
         this.eventEmitter.emit(`race-button${id}: start animation`, JSON.stringify(engineOptionsResults[i]));
         startedCars.push(id);
 
-        const engineStartResult: Promise<IEngineStartResult> = getEngineStartResult(id);
+        const engineStartResult: Promise<TEngineStartResult> = fetchEngineStartResult(id);
         this.eventEmitter.emit(`stop-engine-button${id}: remove disabled`);
 
-        engineStartResult.then((result: IEngineStartResult): void => {
+        engineStartResult.then((result: TEngineStartResult): void => {
           if (!result.success) {
             this.eventEmitter.emit(`car-animation${id}: cancel`, EngineStatus.started);
           }
@@ -356,14 +356,14 @@ export default class ControlMenu extends Component {
   private handleResetButtonListener(resetButtonComponent: Component): void {
     resetButtonComponent.addListener('click', async () => {
       this.eventEmitter.emit('reset-button: add disabled');
-      const carsInfo: TCars = await getCarsPromise();
+      const carsInfo: TCars = await fetchCars();
 
       const engineOptionsPromises: Promise<TEngineOptions>[] = [];
       for (let i = 0; i < carsInfo.cars.length; i += 1) {
         const { id }: { id: number } = carsInfo.cars[i];
 
         this.eventEmitter.emit(`stop-engine-button${id}: add disabled`);
-        engineOptionsPromises.push(getEngineOptions(id, EngineStatus.stopped));
+        engineOptionsPromises.push(fetchEngineOptions(id, EngineStatus.stopped));
       }
 
       const engineOptionsResults: TEngineOptions[] = await Promise.all(engineOptionsPromises);
@@ -410,7 +410,7 @@ export default class ControlMenu extends Component {
       this.eventEmitter.emit('race-button: add disabled');
       await this.generateCars();
 
-      const carsInfo: TCars = await getCarsPromise();
+      const carsInfo: TCars = await fetchCars();
       if (carsInfo.cars.length) {
         this.eventEmitter.emit('race-button: remove disabled');
       }
@@ -467,7 +467,7 @@ export default class ControlMenu extends Component {
       const randomCarName: string = this.generateRandomCarName();
       const randomColor: string = this.generateRandomColor();
 
-      promises.push(getCreatedCarPromise({ name: randomCarName, color: randomColor }));
+      promises.push(fetchCreatedCar({ name: randomCarName, color: randomColor }));
     }
 
     const result: TCar[] = await Promise.all(promises);

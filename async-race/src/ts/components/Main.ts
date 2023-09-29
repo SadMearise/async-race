@@ -2,15 +2,15 @@ import Component from './Component';
 import EventEmitter from '../utils/EventEmitter';
 import ControlMenu from './controlMenu/ControlMenu';
 import Garage from './garage/Garage';
-import getCarsPromise from '../api/getCars';
+import fetchCars from '../api/getCars';
 import {
   TCar, TCars, TWinner, TWinners,
 } from '../types';
-import getWinnersPromise from '../api/getWinners';
+import fetchWinners from '../api/getWinners';
 import LeaderboardPagination from './pagination/LeaderboardPagination';
 import GaragePagination from './pagination/GaragePagination';
 import Leaderboard from './leaderboard/Leaderboard';
-import getCarPromise from '../api/getCar';
+import fetchCar from '../api/getCar';
 
 export default class Main extends Component {
   private eventEmitter: EventEmitter;
@@ -29,8 +29,8 @@ export default class Main extends Component {
   }
 
   private async render(): Promise<void> {
-    const carsInfo: TCars = await getCarsPromise();
-    const winnersInfo: TWinners = await getWinnersPromise();
+    const carsInfo: TCars = await fetchCars();
+    const winnersInfo: TWinners = await fetchWinners();
     const winnersCarsInfo: TCar[] = await this.getWinnersCarsInfo(winnersInfo);
 
     const controlMenuComponent: ControlMenu = new ControlMenu(this.eventEmitter, carsInfo);
@@ -63,7 +63,7 @@ export default class Main extends Component {
 
     const carsInfoPromises: Promise<TCar>[] = [];
     for (let i = 0; i < winners.length; i += 1) {
-      carsInfoPromises.push(getCarPromise(winners[i].id));
+      carsInfoPromises.push(fetchCar(winners[i].id));
     }
 
     const carsInfoResults: TCar[] = await Promise.all(carsInfoPromises);

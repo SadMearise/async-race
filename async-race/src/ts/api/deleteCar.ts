@@ -1,7 +1,7 @@
 import { GARAGE_URL } from './constants';
-import { HTTPMethods } from '../enums';
+import { HTTPMethods } from '../constants';
 
-const getDeletedCarPromise = async (id: number): Promise<void> => {
+const fetchDeletedCar = async (id: number): Promise<void> => {
   const response: Response = await fetch(
     `${GARAGE_URL}/${id}`,
     {
@@ -9,7 +9,9 @@ const getDeletedCarPromise = async (id: number): Promise<void> => {
     },
   );
 
-  return response.json();
+  const deletedCar = await response.json();
+
+  return deletedCar;
 };
 
-export default getDeletedCarPromise;
+export default fetchDeletedCar;

@@ -1,7 +1,7 @@
 import { WINNERS_URL } from './constants';
-import { HTTPMethods } from '../enums';
+import { HTTPMethods } from '../constants';
 
-const getDeletedWinnerPromise = async (id: number): Promise<Record<string, never>> => {
+const fetchDeletedWinner = async (id: number): Promise<object | Error> => {
   try {
     const response: Response = await fetch(
       `${WINNERS_URL}/${id}`,
@@ -11,9 +11,11 @@ const getDeletedWinnerPromise = async (id: number): Promise<Record<string, never
     );
 
     return await response.json();
-  } catch (error: unknown) {
-    return {};
+  } catch (error) {
+    const err = error as Error;
+
+    return err;
   }
 };
 
-export default getDeletedWinnerPromise;
+export default fetchDeletedWinner;

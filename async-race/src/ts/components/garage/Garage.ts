@@ -1,17 +1,17 @@
 import Component from '../Component';
 import SVGComponent from '../SVGComponent';
 import EventEmitter from '../../utils/EventEmitter';
-import { CAR_SVG, MILLISECONDS_PER_SECOND } from './constants';
-import getDeletedCarPromise from '../../api/deleteCar';
-import getCarsPromise from '../../api/getCars';
-import getEngineOptions from '../../api/controlCarEngine';
-import { EngineStatus, Pages } from '../../enums';
+import { GARAGE_CAR_SVG, MILLISECONDS_PER_SECOND } from './constants';
+import fetchDeletedCar from '../../api/deleteCar';
+import fetchCars from '../../api/getCars';
+import fetchEngineOptions from '../../api/controlCarEngine';
+import { EngineStatus, Pages } from '../../constants';
 import {
-  IEngineStartResult, TCar, TCars, TEngineOptions,
+  TEngineStartResult, TCar, TCars, TEngineOptions,
 } from '../../types';
-import getEngineStartResult from '../../api/getEngineStartResult';
 import state from '../../data/state';
 import startedCars from '../../data/startedCars';
+import fetchEngineStartResult from '../../api/getEngineStartResult';
 
 export default class Garage extends Component {
   private eventEmitter: EventEmitter;
@@ -125,8 +125,8 @@ export default class Garage extends Component {
   private async removeCar(trackComponent: Component): Promise<void> {
     const trackID: number = Number(trackComponent.getNode().dataset.id);
 
-    await getDeletedCarPromise(trackID);
-    let carsInfo: TCars = await getCarsPromise();
+    await fetchDeletedCar(trackID);
+    let carsInfo: TCars = await fetchCars();
 
     if (!carsInfo.cars.length) {
       this.eventEmitter.emit('race-button: add disabled');
@@ -134,7 +134,7 @@ export default class Garage extends Component {
         state.currentGaragePage -= 1;
       }
     }
-    carsInfo = await getCarsPromise();
+    carsInfo = await fetchCars();
 
     this.eventEmitter.emit('garage: rerender', JSON.stringify(carsInfo));
     this.eventEmitter.emit('garage-pagination: rerender', JSON.stringify(carsInfo));
@@ -309,15 +309,15 @@ export default class Garage extends Component {
     this.eventEmitter.subscribe(`start-engine-button${id}: start`, async () => {
       this.eventEmitter.emit(`start-engine-button${id}: add disabled`);
 
-      const engineOptions: TEngineOptions = await getEngineOptions(id, EngineStatus.started);
+      const engineOptions: TEngineOptions = await fetchEngineOptions(id, EngineStatus.started);
 
       this.eventEmitter.emit(`start-engine-button${id}: start animation`, JSON.stringify(engineOptions));
       startedCars.push(id);
 
-      const engineStartResult: Promise<IEngineStartResult> = getEngineStartResult(id);
+      const engineStartResult: Promise<TEngineStartResult> = fetchEngineStartResult(id);
       this.eventEmitter.emit(`stop-engine-button${id}: remove disabled`);
 
-      engineStartResult.then((result: IEngineStartResult) => {
+      engineStartResult.then((result: TEngineStartResult) => {
         if (!result.success) {
           this.eventEmitter.emit(`car-animation${id}: cancel`, EngineStatus.started);
         }
@@ -352,7 +352,7 @@ export default class Garage extends Component {
     this.eventEmitter.subscribe(`stop-engine-button${id}: stop`, async () => {
       this.eventEmitter.emit(`stop-engine-button${id}: add disabled`);
 
-      await getEngineOptions(id, EngineStatus.stopped);
+      await fetchEngineOptions(id, EngineStatus.stopped);
 
       const filteredStartedCars: number[] = startedCars.filter((carID) => carID !== id);
       startedCars.length = 0;
@@ -435,15 +435,15 @@ export default class Garage extends Component {
   private getRenderedSVGComponent(color: string): SVGComponent {
     const svgComponent = new SVGComponent({
       tagName: 'svg',
-      xmlns: CAR_SVG.xmlns,
-      classNames: CAR_SVG.classNames,
-      attributes: CAR_SVG.attributes,
+      xmlns: GARAGE_CAR_SVG.xmlns,
+      classNames: GARAGE_CAR_SVG.classNames,
+      attributes: GARAGE_CAR_SVG.attributes,
     });
 
     const pathComponent = new SVGComponent({
       tagName: 'path',
-      xmlns: CAR_SVG.xmlns,
-      attributes: { ...CAR_SVG.path.attributes, fill: `${color}` },
+      xmlns: GARAGE_CAR_SVG.xmlns,
+      attributes: { ...GARAGE_CAR_SVG.path.attributes, fill: `${color}` },
     });
 
     svgComponent.append(pathComponent);

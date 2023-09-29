@@ -1,10 +1,9 @@
 import { WINNERS_URL } from './constants';
-import { WINNERS_LIMIT } from '../constants';
-import { HTTPMethods } from '../enums';
+import { WINNERS_LIMIT, HTTPMethods } from '../constants';
 import state from '../data/state';
 import { TWinners } from '../types';
 
-const getWinnersPromise = async (sort?: string, order?: string): Promise<TWinners> => {
+const fetchWinners = async (sort?: string, order?: string): Promise<TWinners> => {
   let url = `${WINNERS_URL}?_page=${state.currentLeaderboardPage}&_limit=${WINNERS_LIMIT}`;
 
   if (sort) {
@@ -21,11 +20,7 @@ const getWinnersPromise = async (sort?: string, order?: string): Promise<TWinner
       method: HTTPMethods.get,
     },
   );
-  let totalWinners: string | null = response.headers.get('X-Total-Count');
-
-  if (!totalWinners) {
-    totalWinners = '0';
-  }
+  const totalWinners: string | null = response.headers.get('X-Total-Count');
 
   return {
     winners: await response.json(),
@@ -33,4 +28,4 @@ const getWinnersPromise = async (sort?: string, order?: string): Promise<TWinner
   };
 };
 
-export default getWinnersPromise;
+export default fetchWinners;

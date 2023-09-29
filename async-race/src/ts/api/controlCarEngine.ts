@@ -1,8 +1,8 @@
-import { HTTPMethods, EngineStatus } from '../enums';
+import { HTTPMethods, EngineStatus } from '../constants';
 import { TEngineOptions } from '../types';
 import { ENGINE_URL } from './constants';
 
-const getEngineOptions = async (id: number, status: EngineStatus): Promise<TEngineOptions> => {
+const fetchEngineOptions = async (id: number, status: EngineStatus): Promise<TEngineOptions> => {
   const response: Response = await fetch(
     `${ENGINE_URL}?id=${id}&status=${status}`,
     {
@@ -10,7 +10,9 @@ const getEngineOptions = async (id: number, status: EngineStatus): Promise<TEngi
     },
   );
 
-  return response.json();
+  const engineOptions = await response.json();
+
+  return engineOptions;
 };
 
-export default getEngineOptions;
+export default fetchEngineOptions;

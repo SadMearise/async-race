@@ -1,10 +1,9 @@
 import { GARAGE_URL } from './constants';
-import { GARAGE_LIMIT } from '../constants';
-import { HTTPMethods } from '../enums';
+import { GARAGE_LIMIT, HTTPMethods } from '../constants';
 import state from '../data/state';
 import { TCars } from '../types';
 
-const getCarsPromise = async (): Promise<TCars> => {
+const fetchCars = async (): Promise<TCars> => {
   const response: Response = await fetch(
     `${GARAGE_URL}?_page=${state.currentGaragePage}&_limit=${GARAGE_LIMIT}`,
     {
@@ -19,4 +18,4 @@ const getCarsPromise = async (): Promise<TCars> => {
   };
 };
 
-export default getCarsPromise;
+export default fetchCars;

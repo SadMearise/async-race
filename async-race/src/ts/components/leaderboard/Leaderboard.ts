@@ -1,18 +1,18 @@
 import Component from '../Component';
 import EventEmitter from '../../utils/EventEmitter';
-import { Order, Pages } from '../../enums';
+import { Order, Pages } from '../../constants';
 import state from '../../data/state';
 import { TCar, TWinner, TWinners } from '../../types';
 import SVGComponent from '../SVGComponent';
 import {
-  CAR_SVG, TABLE_COLUMNS, TD_CLASSNAMES, TD_TAG, TH_CLASSNAMES, TH_HEADERS, TH_TAG,
+  LEADERBOARD_CAR_SVG, TABLE_COLUMNS, TD_CLASSNAMES, TD_TAG, TH_CLASSNAMES, TH_HEADERS, TH_TAG,
 } from './constants';
-import getDeletedWinnerPromise from '../../api/deleteWinner';
-import getWinnersPromise from '../../api/getWinners';
-import getCarPromise from '../../api/getCar';
-import getCreatedWinnerPromise from '../../api/createWinner';
-import getWinnerPromise from '../../api/getWinner';
-import getUpdatedWinnerPromise from '../../api/updateWinner';
+import fetchDeletedWinner from '../../api/deleteWinner';
+import fetchWinners from '../../api/getWinners';
+import fetchCar from '../../api/getCar';
+import fetchCreatedWinner from '../../api/createWinner';
+import fetchWinner from '../../api/getWinner';
+import fetchUpdatedWinner from '../../api/updateWinner';
 
 export default class Leaderboard extends Component {
   private eventEmitter: EventEmitter;
@@ -57,7 +57,7 @@ export default class Leaderboard extends Component {
     let wins: number;
 
     try {
-      const winnerInfo: TWinner = await getWinnerPromise(id);
+      const winnerInfo: TWinner = await fetchWinner(id);
       if (!Object.keys(winnerInfo).length) {
         throw new Error();
       }
@@ -67,16 +67,16 @@ export default class Leaderboard extends Component {
       if (winnerInfo.time < time) {
         time = winnerInfo.time;
       }
-      const updatedWinner: TWinner = await getUpdatedWinnerPromise(id, { wins, time });
+      const updatedWinner: TWinner = await fetchUpdatedWinner(id, { wins, time });
       if (!Object.keys(updatedWinner).length) {
         throw new Error();
       }
     } catch {
       wins = 1;
-      await getCreatedWinnerPromise({ id, wins, time });
+      await fetchCreatedWinner({ id, wins, time });
     }
 
-    const winnersInfo: TWinners = await getWinnersPromise();
+    const winnersInfo: TWinners = await fetchWinners();
 
     this.eventEmitter.emit('leaderboard: rerender', JSON.stringify(winnersInfo));
     this.eventEmitter.emit('leaderboard-pagination: rerender', JSON.stringify(winnersInfo));
@@ -108,12 +108,7 @@ export default class Leaderboard extends Component {
   private async getWinnersCarsInfo(winnersInfo: TWinners): Promise<TCar[]> {
     const { winners }: { winners: TWinner[] } = winnersInfo;
 
-    const carsInfoPromises: Promise<TCar>[] = [];
-    for (let i = 0; i < winners.length; i += 1) {
-      carsInfoPromises.push(getCarPromise(winners[i].id));
-    }
-
-    const carsInfoResults: TCar[] = await Promise.all(carsInfoPromises);
+    const carsInfoResults: TCar[] = await Promise.all(winners.map((winner) => fetchCar(winner.id)));
 
     return carsInfoResults;
   }
@@ -165,19 +160,18 @@ export default class Leaderboard extends Component {
 
     const { winners }: { winners: TWinner[] } = this.winnersInfo;
 
-    for (let i = 0; i < this.winnersCarsInfo.length; i += 1) {
-      const carNumber: number = i + 1;
-      const tableRowComponent = this.getRenderedTableRow(
-        this.winnersCarsInfo[i].id,
-        carNumber,
-        this.winnersCarsInfo[i].color,
-        this.winnersCarsInfo[i].name,
-        winners[i].wins,
-        winners[i].time,
-      );
+    tableBodyComponent.append(...this.winnersCarsInfo.map((winnerCar, index) => {
+      const carNumber = index + 1;
 
-      tableBodyComponent.append(tableRowComponent);
-    }
+      return this.getRenderedTableRow(
+        winnerCar.id,
+        carNumber,
+        winnerCar.color,
+        winnerCar.name,
+        winners[index].wins,
+        winners[index].time,
+      );
+    }));
 
     return tableBodyComponent;
   }
@@ -221,7 +215,7 @@ export default class Leaderboard extends Component {
         state.sortedTime = sortMode;
       }
 
-      const winnersInfo: TWinners = await getWinnersPromise(idName, sortMode);
+      const winnersInfo: TWinners = await fetchWinners(idName, sortMode);
       this.eventEmitter.emit('leaderboard: rerender', JSON.stringify(winnersInfo));
     });
   }
@@ -243,16 +237,14 @@ export default class Leaderboard extends Component {
       attributes: { 'data-id': `${carID}` },
     });
 
-    for (let i = 0; i < TABLE_COLUMNS; i += 1) {
-      const tableCell = this.getRenderedTableCell(
-        TD_TAG,
-        TD_CLASSNAMES,
-        rowContent[i],
-        rowColor[i],
-      );
+    const cells = new Array(TABLE_COLUMNS).fill(0).map((_, i) => this.getRenderedTableCell(
+      TD_TAG,
+      TD_CLASSNAMES,
+      rowContent[i],
+      rowColor[i],
+    ));
 
-      tableRowComponent.append(tableCell);
-    }
+    tableRowComponent.append(...cells);
 
     this.eventEmitter.unsubscribe(`remove-button${carID}: remove car from leaderboard`);
     this.eventEmitter.subscribe(`remove-button${carID}: remove car from leaderboard`, () => {
@@ -265,12 +257,12 @@ export default class Leaderboard extends Component {
   private async removeCar(tableRowComponent: Component): Promise<void> {
     const rowID: number = Number(tableRowComponent.getNode().dataset.id);
 
-    await getDeletedWinnerPromise(rowID);
-    let winnersInfo: TWinners = await getWinnersPromise();
+    await fetchDeletedWinner(rowID);
+    let winnersInfo: TWinners = await fetchWinners();
 
     if (!winnersInfo.winners.length && state.currentLeaderboardPage > 1) {
       state.currentLeaderboardPage -= 1;
-      winnersInfo = await getWinnersPromise();
+      winnersInfo = await fetchWinners();
     }
 
     this.eventEmitter.emit('leaderboard: rerender', JSON.stringify(winnersInfo));
@@ -302,15 +294,15 @@ export default class Leaderboard extends Component {
   private getRenderedSVGComponent(color: string): SVGComponent {
     const svgComponent = new SVGComponent({
       tagName: 'svg',
-      xmlns: CAR_SVG.xmlns,
-      classNames: CAR_SVG.classNames,
-      attributes: CAR_SVG.attributes,
+      xmlns: LEADERBOARD_CAR_SVG.xmlns,
+      classNames: LEADERBOARD_CAR_SVG.classNames,
+      attributes: LEADERBOARD_CAR_SVG.attributes,
     });
 
     const pathComponent = new SVGComponent({
       tagName: 'path',
-      xmlns: CAR_SVG.xmlns,
-      attributes: { ...CAR_SVG.path.attributes, fill: `${color}` },
+      xmlns: LEADERBOARD_CAR_SVG.xmlns,
+      attributes: { ...LEADERBOARD_CAR_SVG.path.attributes, fill: `${color}` },
     });
 
     svgComponent.append(pathComponent);

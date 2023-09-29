@@ -1,4 +1,4 @@
-import { Pages } from '../enums';
+import { Pages } from '../constants';
 import { TState } from '../types/index';
 
 const state: TState = {
