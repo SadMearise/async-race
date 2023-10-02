@@ -1,9 +1,0 @@
-@function getRemFromPx($px) {
-  $result: math.div($px, $defaultFontSize) + rem;
-  @return $result;
-}
-
-@function getEmFromPx($px) {
-  $result: math.div($px, $defaultFontSize) + em;
-  @return $result;
-}
